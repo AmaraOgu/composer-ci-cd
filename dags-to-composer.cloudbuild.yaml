@@ -6,7 +6,7 @@ steps:
 
   #update the composer environment
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'f', '--location', '${_COMPOSER_REGION}']
+    args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'requirements-composer.txt', '--location', '${_COMPOSER_REGION}']
     id: 'update-composer-env'
 
   # run
