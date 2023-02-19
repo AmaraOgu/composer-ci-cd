@@ -5,15 +5,24 @@ steps:
     args: ["install", "-r", "utils/requirements.txt", "--user"]
 
   #update the composer environment
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'requirements-composer.txt', '--location', '${_COMPOSER_REGION}']
+  #   id: 'update-composer-env'
+
+  #update the composer environment
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'requirements-composer.txt', '--location', '${_COMPOSER_REGION}' \
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      custom_comm=$(gcloud composer environments update $_COMPOSER_NAME --update-pypi-packages-from-file requirements-composer.txt --location $_COMPOSER_REGION --verbosity=debug 2>&1); \
       echo "$custom_comm"; \
-        if [[ "$custom_comm" == *"ERROR: (gcloud.composer.environments.update) INVALID_ARGUMENT: No change in configuration. Must specify a change to configuration.software_configuration.pypi_dependencies"* ]]; then \
-          echo "This failure is expected if there is no change to requirements.txt"; exit 0; \ 
-        else exit 1; \
-        fi
-      ]
-    id: 'update-composer-env'
+      if [[ "$custom_comm" == *"ERROR: (gcloud.composer.environments.update) INVALID_ARGUMENT: No change in configuration. Must specify a change to configuration.software_configuration.pypi_dependencies"* ]]; then \
+        echo "This failure is expected if there is no change to requirements.txt"; exit 0; \ 
+      else exit 1; \
+      fi
+  id: 'update-composer-env'
+  timeout: 3600s
 
   # run
   - name: python
