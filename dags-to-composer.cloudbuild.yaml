@@ -1,0 +1,16 @@
+steps:
+  # install dependencies
+  - name: python
+    entrypoint: pip
+    args: ["install", "-r", "utils/requirements.txt", "--user"]
+
+  #update the composer environment
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'f', '--location', '${_COMPOSER_REGION}']
+    id: 'update-composer-env'
+
+  # run
+  - name: python
+    entrypoint: python
+    args: ["utils/dags_to_composer.py", "--dags_directory=${_DAGS_DIRECTORY}", "--dags_bucket=${_DAGS_BUCKET}"]
+
