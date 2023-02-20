@@ -4,7 +4,6 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQue
 from airflow.providers.google.cloud.operators.gcs import GCSCreateBucketOperator
 from airflow.providers.google.cloud.operators.gcs import GCSDeleteBucketOperator
 import uuid
-from airflow.utils.state import State
 from datetime import timedelta
 import datetime as dt
 from airflow.utils.dates import days_ago
@@ -70,21 +69,20 @@ with DAG('Stock_data',
     generate_uuid = PythonOperator(
             task_id="generate_uuid", 
             python_callable=lambda: "the_demo_" + str(uuid.uuid4()),
-            # dag=dag
+            
         )
 
     create_bucket = GCSCreateBucketOperator(
             task_id="create_bucket",
             bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
             project_id=PROJECT_ID,
-            # dag=dag
+            
         )
 
     pull_stock_data_to_gcs = PythonOperator(
         task_id = 'pull_stock_data_to_gcs',
         python_callable = get_data,
-        # provide_context=True,
-        # dag=dag
+
         )
 
     load_to_bq = GCSToBigQueryOperator(
@@ -102,13 +100,11 @@ with DAG('Stock_data',
         {'name': 'GOOGL', 'type': 'FLOAT64', 'mode': 'NULLABLE'},
         {'name': 'MSFT', 'type': 'FLOAT64', 'mode': 'NULLABLE'},
             ],
-        # dag=dag
         )
     
     delete_bucket = GCSDeleteBucketOperator(
             task_id="delete_bucket",
             bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
-            # dag=dag
         )
 
     (
@@ -118,8 +114,3 @@ with DAG('Stock_data',
         >> load_to_bq
         >> delete_bucket
     )
-
-# if __name__ == "__main__":
-#     dag.clear(dag_run_state=State.NONE)
-#     dag.run()
-#
