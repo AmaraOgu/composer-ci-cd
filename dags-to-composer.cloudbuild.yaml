@@ -11,23 +11,23 @@ steps:
 
   #update the composer environment
   - name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      set -e
-      # Run the command and redirect stderr to stdout
-      try:
-        gcloud composer environments update ${_COMPOSER_NAME} --location=${_COMPOSER_REGION} --update-pypi-packages-from-file=requirements-composer.txt
-      except subprocess.CalledProcessError as ex:
-        if 'No change in configuration. Must specify a change to configuration.software_configuration.pypi_dependencies' in ex.output.decode('utf-8'):
-          # Handle the specific error here
-          print('Ignoring error: No change in configuration detected.')
-        else:
-          # Re-raise the error for other errors
-          raise ex
-  id: 'update-composer-env'
-  timeout: 3600s
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -e
+        # Run the command and redirect stderr to stdout
+        try:
+          gcloud composer environments update ${_COMPOSER_NAME} --location=${_COMPOSER_REGION} --update-pypi-packages-from-file=requirements-composer.txt
+        except subprocess.CalledProcessError as ex:
+          if 'No change in configuration. Must specify a change to configuration.software_configuration.pypi_dependencies' in ex.output.decode('utf-8'):
+            # Handle the specific error here
+            print('Ignoring error: No change in configuration detected.')
+          else:
+            # Re-raise the error for other errors
+            raise ex
+    id: 'update-composer-env'
+    timeout: 3600s
 
   # run
   - name: python
