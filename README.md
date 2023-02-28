@@ -5,7 +5,7 @@ This code looks into a way to implement CI/CD in Cloud Composer using Cloud Buil
 The blog for this code is published on [Medium](https://medium.com/@amarachi.ogu/implementing-ci-cd-in-cloud-composer-using-cloud-build-and-github-part-2-a721e4ed53da) 
 
 Workflow Architecture Diagram   
-![Workflow Architecture Diagram](https://medium.com/@amarachi.ogu/implementing-ci-cd-in-cloud-composer-using-cloud-build-and-github-part-2-a721e4ed53da)
+![Workflow Architecture Diagram](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*hIIbqvmZqgrcgDcp3jv4Iw.png)
 
 ## File Layout
 
@@ -25,26 +25,30 @@ Workflow Architecture Diagram
 
 ```
 
-### dags: 
+-dags: 
 This directory contains the DAG and the DAG test files.   
-stock_data_dag.py file is the stock data DAG we developed in a previous blog which gets deployed to Cloud Composer.  
-stock_data_dag_test.py contains dag validation tests to ensure the reliability and correctness of the workflows.  
+- stock_data_dag.py file is the stock data DAG we developed in a previous blog which gets deployed to Cloud Composer.    
+- stock_data_dag_test.py contains dag validation tests to ensure the reliability and correctness of the workflows.  
 
-### requirements-composer.txt - contains the packages required to update the Cloud Composer environment.  
+-requirements-composer.txt - 
+Contains the packages required to update the Cloud Composer environment.  
 
-### requirements-test.txt - contains the packages required by the DAG test file.  
+-requirements-test.txt - 
+Contains the packages required by the DAG test file.  
 
-### requirements.txt - contains the packages required by the DAG file.  
+-requirements.txt - 
+Contains the packages required by the DAG file.  
 
-### test-dags.cloudbuild.yaml - a YAML configuration file for the Cloud Build DAG validation checks.  
+-test-dags.cloudbuild.yaml - 
+A YAML configuration file for the Cloud Build DAG validation checks.  
 
-### utils:  
+-utils:  
 The utility contains a script  
-add_dags_to_composer.py - syncs the DAGs with your Cloud Composer environment after they are merged to the main branch in the repository.  
-requirements.txt - contains the packages required by the add_dags_to_composer.py.  
+- add_dags_to_composer.py - syncs the DAGs with your Cloud Composer environment after they are merged to the main branch in the repository.  
+- requirements.txt - contains the packages required by the add_dags_to_composer.py.  
 
 
-Create two Composer environment
+## Create Composer environment
 ```
 gcloud composer environments create dev-environment \
  --location us-central1 \
