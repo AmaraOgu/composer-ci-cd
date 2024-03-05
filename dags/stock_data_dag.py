@@ -78,7 +78,7 @@ with DAG(
     schedule_interval="@once",
     catchup=False,
     default_args=default_args,
-    tags=["gcs", "bq", "cloud_build"],
+    tags=["gcs", "bq", "cloud_build", "test"],
 ) as dag:
 
     generate_uuid = PythonOperator(
